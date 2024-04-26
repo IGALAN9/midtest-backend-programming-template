@@ -1,5 +1,6 @@
 const { errorResponder, errorTypes } = require('../../../core/errors');
 const authenticationServices = require('./authentication-service');
+import { rateLimit } from 'express-rate-limit';
 
 /**
  * Handle login request
@@ -8,6 +9,13 @@ const authenticationServices = require('./authentication-service');
  * @param {object} next - Express route middlewares
  * @returns {object} Response object or pass an error to the next route
  */
+
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+//   message: 'Too many failed login attempts',
+// })
+
 async function login(request, response, next) {
   const { email, password } = request.body;
 
@@ -33,4 +41,5 @@ async function login(request, response, next) {
 
 module.exports = {
   login,
+  // limiter,
 };

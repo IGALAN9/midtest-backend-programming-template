@@ -1,11 +1,21 @@
 const { User } = require('../../../models');
+const paginate = require('express-paginate');
 
 /**
  * Get a list of users
  * @returns {Promise}
  */
-async function getUsers() {
-  return User.find({});
+async function getUsers(request, response) {
+  const [results, itemCount] = await Promise.all([
+    User.find({}).limit(request.query.limit).skip(request.skip).lean().exec(),
+    User.count({}),
+  ]);
+  const pageCount = Math.ceil(itemCount / request.query.limit);
+  return response.status(200).json({
+    object: 'list',
+    has_more: paginate.hasNextPages(request)(pageCount),
+    data: results,
+  });
 }
 
 /**
