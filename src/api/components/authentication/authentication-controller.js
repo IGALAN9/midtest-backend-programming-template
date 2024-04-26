@@ -1,6 +1,6 @@
 const { errorResponder, errorTypes } = require('../../../core/errors');
 const authenticationServices = require('./authentication-service');
-import { rateLimit } from 'express-rate-limit';
+// import { rateLimit } from 'express-rate-limit';
 
 /**
  * Handle login request

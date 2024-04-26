@@ -4,11 +4,13 @@ const authenticationMiddleware = require('../../middlewares/authentication-middl
 const celebrate = require('../../../core/celebrate-wrappers');
 const usersControllers = require('./users-controller');
 const usersValidator = require('./users-validator');
+const paginate = require('express-paginate');
 // const { limiter } = require('../authentication/authentication-controller');
 
 const route = express.Router();
 
 module.exports = (app) => {
+  app.use(paginate.middleware(10, 50));
   app.use('/users', route);
 
   // Get list of users

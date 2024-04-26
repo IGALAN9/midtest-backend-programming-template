@@ -7,13 +7,21 @@ const paginate = require('express-paginate');
  */
 async function getUsers(request, response) {
   const [results, itemCount] = await Promise.all([
-    User.find({}).limit(request.query.limit).skip(request.skip).lean().exec(),
+    User.find({})
+      .select('-password')
+      .limit(request.query.limit)
+      .skip(request.skip)
+      .lean()
+      .exec(),
     User.count({}),
   ]);
   const pageCount = Math.ceil(itemCount / request.query.limit);
   return response.status(200).json({
-    object: 'list',
-    has_more: paginate.hasNextPages(request)(pageCount),
+    next_page: paginate.hasNextPages(request)(pageCount),
+    has_previous_page: request.query.page > 1,
+    page_number: request.query.page || 1,
+    page_size: request.query.limit || 10,
+    page_count: pageCount,
     data: results,
   });
 }

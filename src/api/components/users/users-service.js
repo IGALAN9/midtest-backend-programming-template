@@ -1,12 +1,13 @@
 const usersRepository = require('./users-repository');
 const { hashPassword, passwordMatched } = require('../../../utils/password');
+const { response } = require('express');
 
 /**
  * Get list of users
  * @returns {Array}
  */
-async function getUsers() {
-  const users = await usersRepository.getUsers();
+async function getUsers(request, response) {
+  const users = await usersRepository.getUsers(request, response);
 
   const results = [];
   for (let i = 0; i < users.length; i += 1) {

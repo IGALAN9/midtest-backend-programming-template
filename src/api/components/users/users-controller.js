@@ -11,18 +11,9 @@ const paginate = require('express-paginate');
  */
 async function getUsers(request, response, next) {
   try {
-    const results = await usersService.getUsers();
-    const itemCount = results.count;
-    const page = request.query.page || 1;
-    const limit = request.query.limit || 10;
-    const pageCount = Math.ceil(itemCount / limit);
-    const has_next_page = paginate.hasNextPages(request)(pageCount);
-    const has_prev_page = request.query.page > 1;
+    const users = await usersService.getUsers(request, response);
 
-    return response.status(200).json({
-      users: { page, limit, pageCount, has_next_page, has_prev_page },
-      data: results,
-    });
+    return response.status(200).json(users);
   } catch (error) {
     return next(error);
   }
