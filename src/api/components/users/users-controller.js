@@ -1,5 +1,6 @@
 const usersService = require('./users-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
+const paginate = require('express-paginate');
 
 /**
  * Handle get list of users request
@@ -10,8 +11,18 @@ const { errorResponder, errorTypes } = require('../../../core/errors');
  */
 async function getUsers(request, response, next) {
   try {
-    const users = await usersService.getUsers();
-    return response.status(200).json(users);
+    const results = await usersService.getUsers();
+    const itemCount = results.count;
+    const page = request.query.page || 1;
+    const limit = request.query.limit || 10;
+    const pageCount = Math.ceil(itemCount / limit);
+    const has_next_page = paginate.hasNextPages(request)(pageCount);
+    const has_prev_page = request.query.page > 1;
+
+    return response.status(200).json({
+      users: { page, limit, pageCount, has_next_page, has_prev_page },
+      data: results,
+    });
   } catch (error) {
     return next(error);
   }
