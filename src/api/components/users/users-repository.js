@@ -24,7 +24,7 @@ async function getUsers(request, response) {
     .limit(request.query.limit)
     .skip(request.skip);
 
-  if (field.length > 0 && value.length > 0) {
+  if (field && value) {
     userQuery.where({ [field]: { $regex: new RegExp('.*' + value + '.*') } });
   }
 
