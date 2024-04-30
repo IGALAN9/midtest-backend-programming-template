@@ -5,7 +5,7 @@ const celebrate = require('../../../core/celebrate-wrappers');
 const usersControllers = require('./users-controller');
 const usersValidator = require('./users-validator');
 const paginate = require('express-paginate');
-// const { limiter } = require('../authentication/authentication-controller');
+const { limiter } = require('../authentication/authentication-controller');
 
 const route = express.Router();
 
@@ -22,6 +22,7 @@ module.exports = (app) => {
   route.post(
     '/',
     authenticationMiddleware,
+    limiter,
     celebrate(usersValidator.createUser),
     usersControllers.createUser
   );

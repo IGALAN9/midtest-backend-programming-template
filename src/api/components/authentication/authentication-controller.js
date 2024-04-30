@@ -1,6 +1,6 @@
 const { errorResponder, errorTypes } = require('../../../core/errors');
 const authenticationServices = require('./authentication-service');
-// import { rateLimit } from 'express-rate-limit';
+const { rateLimit } = require('express-rate-limit');
 
 /**
  * Handle login request
@@ -10,11 +10,13 @@ const authenticationServices = require('./authentication-service');
  * @returns {object} Response object or pass an error to the next route
  */
 
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000, // 15 minutes
-//   limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
-//   message: 'Too many failed login attempts',
-// })
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 5 minutes
+  limit: 5, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  message: 'Too many failed login attempts',
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
 
 async function login(request, response, next) {
   const { email, password } = request.body;
@@ -41,5 +43,5 @@ async function login(request, response, next) {
 
 module.exports = {
   login,
-  // limiter,
+  limiter,
 };

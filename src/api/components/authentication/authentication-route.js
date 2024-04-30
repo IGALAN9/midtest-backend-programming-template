@@ -11,6 +11,7 @@ module.exports = (app) => {
 
   route.post(
     '/login',
+    authenticationControllers.limiter,
     celebrate(authenticationValidators.login),
     authenticationControllers.login
   );
