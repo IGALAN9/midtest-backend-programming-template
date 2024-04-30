@@ -27,12 +27,16 @@ async function getUsers(request, response) {
     .limit(request.query.limit)
     .skip(request.skip);
 
+  const userCountQuery = User.find({});
+
   //untuk memastikan nilai field dan value tidak kosong
   if (field && value) {
-    //menambahkan user query untuk melakukan pencarian field dengan suatu value tertentu
-    userQuery.where({
+    const search = {
       [field]: { $regex: new RegExp('.*' + value + '.*'), $options: 'i' },
-    });
+    };
+    //menambahkan user query untuk melakukan pencarian field dengan suatu value tertentu
+    userQuery.where(search);
+    userCountQuery.where(search);
   }
 
   //untuk melakukan sorting dengan default value decending
@@ -42,15 +46,17 @@ async function getUsers(request, response) {
 
   //mengeksekusi user query dan menyimpan hasilnya dalam variable result
   const results = await userQuery.lean().exec();
+  const totalResult = await userCountQuery.countDocuments();
   const itemCount = results.length;
-  const pageCount = Math.ceil(itemCount / request.query.limit);
+  const pageCount = Math.ceil(totalResult / request.query.limit);
 
   return response.status(200).json({
-    next_page: paginate.hasNextPages(request)(pageCount), //untuk mengecheck ada next page atau tidak (boolean)
-    has_previous_page: request.query.page > 1, //untuk mengecheck ada previous page atau tidak (boolean)
     page_number: request.query.page || 1, //untuk mengecheck sedang di halaman berapa (Integer)
     page_size: request.query.limit || 10, //untuk mengecheck jumlah data per page (Integer)
     count: itemCount, //untuk menghitung banyak data yang ada
+    total_page: pageCount, //untuk mengecheck banyak halaman yang ada (Integer)
+    has_next_page: paginate.hasNextPages(request)(pageCount), //untuk mengecheck ada next page atau tidak (boolean)
+    has_previous_page: request.query.page > 1, //untuk mengecheck ada previous page atau tidak (boolean)
     data: results, //isi data yang di tampilkan
   });
 }
