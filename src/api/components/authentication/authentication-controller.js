@@ -10,12 +10,17 @@ const { rateLimit } = require('express-rate-limit');
  * @returns {object} Response object or pass an error to the next route
  */
 
+/**
+ * Handle limits login
+ * jika gagal 5 kali bakal kena cooldown 15 menit
+ */
+
 const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 5 minutes
-  limit: 5, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
-  message: 'Too many failed login attempts',
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  windowMs: 15 * 60 * 1000, // jika gagal selama 5 kali akan kena cooldown 15 menit
+  limit: 5, // Limit per ip 5 kali percobaan
+  message: '403 Forbidden: Too many failed login attempts',
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 
 async function login(request, response, next) {
