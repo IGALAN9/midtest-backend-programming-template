@@ -8,13 +8,10 @@ const mongoose = require('mongoose');
  * @params
  */
 async function getUsers(request, response) {
-  // const email = request.query.email || '';
   const sort_by = request.query.sort || 'desc';
   const searchParam = request.query.search || '';
   let field = '';
   let value = '';
-  // console.log(searchParam.includes(':'));
-  // console.log(request.query);
 
   if (searchParam.includes(':')) {
     const [key, val] = searchParam.split(':');
@@ -25,23 +22,10 @@ async function getUsers(request, response) {
   const userQuery = User.find({})
     .select('-password')
     .limit(request.query.limit)
-    .skip(request.skip)
-    .where({ email: value });
+    .skip(request.skip);
 
-  if (field === 'email' && value.includes('*')) {
-    const regexPattern = value.replace(/\*/g, '.*');
-    const regex = new RegExp(regexPattern, 'i');
-    userQuery.where({ searchParam: regex });
-  } else {
-    userQuery.where({ [field]: value });
-  }
-
-  if (searchParam) {
-    userQuery.where({ email: searchParam });
-  }
-
-  if (field && value) {
-    userQuery.where({ [field]: value });
+  if (field.length > 0 && value.length > 0) {
+    userQuery.where({ [field]: { $regex: new RegExp('.*' + value + '.*') } });
   }
 
   if (sort_by && ['asc', 'desc'].includes(sort_by.toLowerCase())) {
@@ -49,7 +33,6 @@ async function getUsers(request, response) {
   }
 
   const results = await userQuery.lean().exec();
-
   const itemCount = results.length;
   const pageCount = Math.ceil(itemCount / request.query.limit);
 
