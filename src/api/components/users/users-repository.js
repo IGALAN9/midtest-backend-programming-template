@@ -7,42 +7,51 @@ const mongoose = require('mongoose');
  * @returns {Promise}
  * @params
  */
-async function getUsers(request, response) {
-  const sort_by = request.query.sort || 'desc';
-  const searchParam = request.query.search || '';
-  let field = '';
-  let value = '';
 
+async function getUsers(request, response) {
+  const sort_by = request.query.sort || 'desc'; //sort by untuk
+  const searchParam = request.query.search || ''; //
+  let field = ''; //deklarasi field
+  let value = ''; //deklarasi value
+
+  //cari user berdasarkan data field yang dicari
   if (searchParam.includes(':')) {
     const [key, val] = searchParam.split(':');
     field = key.trim().toLowerCase();
     value = val.trim();
   }
 
+  //Membuat user query tetapi tidak langsung excecute.
   const userQuery = User.find({})
-    .select('-password')
+    .select('-password') //untuk menghilangkan password
     .limit(request.query.limit)
     .skip(request.skip);
 
+  //untuk memastikan nilai field dan value tidak kosong
   if (field && value) {
-    userQuery.where({ [field]: { $regex: new RegExp('.*' + value + '.*') } });
+    //menambahkan user query untuk melakukan pencarian field dengan suatu value tertentu
+    userQuery.where({
+      [field]: { $regex: new RegExp('.*' + value + '.*'), $options: 'i' },
+    });
   }
 
+  //untuk melakukan sorting dengan default value decending
   if (sort_by && ['asc', 'desc'].includes(sort_by.toLowerCase())) {
     userQuery.sort({ [field || 'email']: sort_by.toLowerCase() });
   }
 
+  //mengeksekusi user query dan menyimpan hasilnya dalam variable result
   const results = await userQuery.lean().exec();
   const itemCount = results.length;
   const pageCount = Math.ceil(itemCount / request.query.limit);
 
   return response.status(200).json({
-    next_page: paginate.hasNextPages(request)(pageCount),
-    has_previous_page: request.query.page > 1,
-    page_number: request.query.page || 1,
-    page_size: request.query.limit || 10,
-    total_data: itemCount,
-    data: results,
+    next_page: paginate.hasNextPages(request)(pageCount), //untuk mengecheck ada next page atau tidak (boolean)
+    has_previous_page: request.query.page > 1, //untuk mengecheck ada previous page atau tidak (boolean)
+    page_number: request.query.page || 1, //untuk mengecheck sedang di halaman berapa (Integer)
+    page_size: request.query.limit || 10, //untuk mengecheck jumlah data per page (Integer)
+    count: itemCount, //untuk menghitung banyak data yang ada
+    data: results, //isi data yang di tampilkan
   });
 }
 
