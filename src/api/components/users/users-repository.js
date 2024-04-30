@@ -1,27 +1,64 @@
 const { User } = require('../../../models');
 const paginate = require('express-paginate');
+const mongoose = require('mongoose');
 
 /**
  * Get a list of users
  * @returns {Promise}
+ * @params
  */
 async function getUsers(request, response) {
-  const [results, itemCount] = await Promise.all([
-    User.find({})
-      .select('-password')
-      .limit(request.query.limit)
-      .skip(request.skip)
-      .lean()
-      .exec(),
-    User.count({}),
-  ]);
+  // const email = request.query.email || '';
+  const sort_by = request.query.sort || 'desc';
+  const searchParam = request.query.search || '';
+  let field = '';
+  let value = '';
+  // console.log(searchParam.includes(':'));
+  // console.log(request.query);
+
+  if (searchParam.includes(':')) {
+    const [key, val] = searchParam.split(':');
+    field = key.trim().toLowerCase();
+    value = val.trim();
+  }
+
+  const userQuery = User.find({})
+    .select('-password')
+    .limit(request.query.limit)
+    .skip(request.skip)
+    .where({ email: value });
+
+  if (field === 'email' && value.includes('*')) {
+    const regexPattern = value.replace(/\*/g, '.*');
+    const regex = new RegExp(regexPattern, 'i');
+    userQuery.where({ searchParam: regex });
+  } else {
+    userQuery.where({ [field]: value });
+  }
+
+  if (searchParam) {
+    userQuery.where({ email: searchParam });
+  }
+
+  if (field && value) {
+    userQuery.where({ [field]: value });
+  }
+
+  if (sort_by && ['asc', 'desc'].includes(sort_by.toLowerCase())) {
+    userQuery.sort({ [field || 'email']: sort_by.toLowerCase() });
+  }
+
+  const results = await userQuery.lean().exec();
+
+  const itemCount = results.length;
   const pageCount = Math.ceil(itemCount / request.query.limit);
+
   return response.status(200).json({
     next_page: paginate.hasNextPages(request)(pageCount),
     has_previous_page: request.query.page > 1,
     page_number: request.query.page || 1,
     page_size: request.query.limit || 10,
-    page_count: pageCount,
+    total_data: itemCount,
     data: results,
   });
 }
