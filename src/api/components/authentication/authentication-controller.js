@@ -14,14 +14,6 @@ const { rateLimit } = require('express-rate-limit');
  * Handle limits login
  * jika gagal 5 kali bakal kena cooldown 15 menit
  */
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // jika gagal selama 5 kali akan kena cooldown 15 menit
-  limit: 5, // Limit per ip 5 kali percobaan
-  statusCode: 403, //kode kesalahan
-  message: '403 Forbidden: Too many failed login attempts', // penjelasan kode kesalahan
-  standardHeaders: true,
-  legacyHeaders: false,
-});
 
 async function login(request, response, next) {
   const { email, password } = request.body;
@@ -34,10 +26,14 @@ async function login(request, response, next) {
     );
 
     if (!loginSuccess) {
-      throw errorResponder(
-        errorTypes.INVALID_CREDENTIALS,
-        'Wrong email or password'
-      );
+      return response.json({
+        status_code: '403',
+        message:
+          'user ' +
+          request.body.email +
+          ' gagal login percobaan login ke- ' +
+          request.rateLimit.used,
+      });
     }
 
     return response.status(200).json(loginSuccess);
@@ -48,5 +44,4 @@ async function login(request, response, next) {
 
 module.exports = {
   login,
-  limiter,
 };
