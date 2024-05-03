@@ -51,8 +51,8 @@ async function getUsers(request, response) {
   const pageCount = Math.ceil(totalResult / request.query.limit);
 
   return response.status(200).json({
-    page_number: request.query.page || 1, //untuk mengecheck sedang di halaman berapa (Integer)
-    page_size: request.query.limit || 10, //untuk mengecheck jumlah data per page (Integer)
+    page_number: request.query.page_number || 1, //untuk mengecheck sedang di halaman berapa (Integer)
+    page_size: request.query.page_limit || 10, //untuk mengecheck jumlah data per page (Integer)
     count: itemCount, //untuk menghitung banyak data yang ada
     total_page: pageCount, //untuk mengecheck banyak halaman yang ada (Integer)
     has_next_page: paginate.hasNextPages(request)(pageCount), //untuk mengecheck ada next page atau tidak (boolean)
