@@ -14,7 +14,7 @@ async function getBankers(request, response) {
   for (let i = 0; i < bankers.length; i += 1) {
     const banker = bankers[i];
     results.push({
-      account_id: bankers.account_id,
+      account_id: banker.account_id,
       nik: banker.nik,
       nama: banker.nama,
       email: banker.email,

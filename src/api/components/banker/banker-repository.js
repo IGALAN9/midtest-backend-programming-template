@@ -5,7 +5,8 @@ const { Banker } = require('../../../models');
  * @returns {Promise}
  */
 async function getBankers() {
-  return Banker.find({});
+  const bankerQuery = Banker.find({}).select('-nik').lean().exec();
+  return bankerQuery;
 }
 
 /**
