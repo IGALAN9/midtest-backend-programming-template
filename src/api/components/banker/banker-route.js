@@ -31,7 +31,7 @@ module.exports = (app) => {
     celebrate(bankersValidator.updateBanker),
     bankersControllers.updateBanker
   );
-  // Delete user
+  // Delete customer
   route.delete(
     '/:account_id',
     authenticationMiddleware,

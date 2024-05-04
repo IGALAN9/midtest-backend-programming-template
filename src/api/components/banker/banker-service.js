@@ -29,7 +29,7 @@ async function getBankers(request, response) {
 
 /**
  * Get banker detail
- * @param {string} id - Banker ID
+ * @param {string} account_id - customer_ID
  * @returns {Object}
  */
 async function getBanker(account_id) {
@@ -53,9 +53,14 @@ async function getBanker(account_id) {
 
 /**
  * Create new banker
- * @param {string} name - Name
- * @param {string} email - Email
- * @param {string} password - Password
+ * @param {string} account_id - customer account_id
+ * @param {string} nik - customer nik
+ * @param {string} nama - customer name
+ * @param {string} email - customer email
+ * @param {string} pin - customer pin
+ * @param {number} balance - customer balance
+ * @param {string} card - customer card_type
+ * @param {number} monthly_tax - customer mothly_tax
  * @returns {boolean}
  */
 async function createBanker(
@@ -120,7 +125,7 @@ async function account_idIsRegistered(account_id) {
 }
 
 /**
- * Update untuk saldo jika banker menambahkan uang ke bank
+ * Update untuk saldo jika customer menambahkan uang ke bank
  * @param {string} account_id - account_id buat cari customer
  * @param {number} balance - balance(saldo)
  * @returns {boolean}
@@ -144,7 +149,7 @@ async function updateBanker(account_id, balance) {
 
 /**
  * Delete banker
- * @param {string} id - Banker ID
+ * @param {string} account_id- Banker ID
  * @returns {boolean}
  */
 async function deleteBanker(account_id) {

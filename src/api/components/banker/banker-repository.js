@@ -10,13 +10,12 @@ async function getBankers() {
 }
 
 /**
- * Get user detail
+ * Get customer detail
  * @param {string} nik - customer nik
  * @returns {Promise}
  */
 
 async function getBankerByAccountId(account_id) {
-  // console.log(nik);
   return Banker.findOne({ account_id: account_id });
 }
 
@@ -65,7 +64,7 @@ async function account_idIsRegistered(account_id) {
 }
 
 /**
- * Update existing user
+ * Update existing customer
  * @param {string} account_id
  * @param {number} balance
  * @returns {Promise}
@@ -84,8 +83,8 @@ async function updateBanker(account_id, balance) {
 }
 
 /**
- * Delete a user
- * @param {string} id - User ID
+ * Delete a customer
+ * @param {string} account_id - customer_id
  * @returns {Promise}
  */
 async function deleteBanker(account_id) {

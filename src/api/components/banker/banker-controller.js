@@ -64,6 +64,14 @@ async function createBanker(request, response, next) {
       monthly_tax = 10000;
     }
 
+    // Check confirmation password
+    if (pin !== pin_confirm) {
+      throw errorResponder(
+        errorTypes.INVALID_PASSWORD,
+        'pin confirmation mismatched'
+      );
+    }
+
     // nik harus unik
     const nikIsRegistered = await bankersService.nikIsRegistered(nik);
     if (nikIsRegistered) {
@@ -127,14 +135,13 @@ async function updateBanker(request, response, next) {
 }
 
 /**
- * Handle delete user request
+ * Handle delete customer request
  * @param {object} request - Express request object
  * @param {object} response - Express response object
  * @param {object} next - Express route middlewares
  * @returns {object} Response object or pass an error to the next route
  */
 async function deleteBanker(request, response, next) {
-  // return response.json({ ok: request });
   try {
     const account_id = request.params.account_id;
     const success = await bankersService.deleteBanker(account_id);
