@@ -24,7 +24,7 @@ async function getUsers(request, response) {
   //Membuat user query tetapi tidak langsung excecute.
   const userQuery = User.find({})
     .select('-password') //untuk menghilangkan password
-    .limit(request.query.limit)
+    .limit(request.query.page_limit)
     .skip(request.skip);
 
   const userCountQuery = User.find({});
@@ -48,7 +48,7 @@ async function getUsers(request, response) {
   const results = await userQuery.lean().exec();
   const totalResult = await userCountQuery.countDocuments();
   const itemCount = results.length;
-  const pageCount = Math.ceil(totalResult / request.query.limit);
+  const pageCount = Math.ceil(totalResult / request.query.page_limit);
 
   return response.status(200).json({
     page_number: request.query.page_number || 1, //untuk mengecheck sedang di halaman berapa (Integer)
