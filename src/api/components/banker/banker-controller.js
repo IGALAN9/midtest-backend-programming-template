@@ -126,9 +126,34 @@ async function updateBanker(request, response, next) {
   }
 }
 
+/**
+ * Handle delete user request
+ * @param {object} request - Express request object
+ * @param {object} response - Express response object
+ * @param {object} next - Express route middlewares
+ * @returns {object} Response object or pass an error to the next route
+ */
+async function deleteBanker(request, response, next) {
+  // return response.json({ ok: request });
+  try {
+    const account_id = request.params.account_id;
+    const success = await bankersService.deleteBanker(account_id);
+    if (!success) {
+      throw errorResponder(
+        errorTypes.UNPROCESSABLE_ENTITY,
+        'Failed to delete Banker'
+      );
+    }
+    return response.status(200).json({ account_id });
+  } catch (error) {
+    return next(error);
+  }
+}
+
 module.exports = {
   getBankers,
   getBanker,
   createBanker,
   updateBanker,
+  deleteBanker,
 };

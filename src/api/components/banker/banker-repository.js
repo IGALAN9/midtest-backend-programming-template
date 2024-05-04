@@ -18,6 +18,12 @@ async function getBanker(nik) {
   // console.log(nik);
   return Banker.findOne({ nik: nik });
 }
+
+async function getBankerByAccountId(account_id) {
+  // console.log(nik);
+  return Banker.findOne({ account_id: account_id });
+}
+
 /**
  * Create new customer
  * @param {string} account_id - account_id
@@ -81,11 +87,22 @@ async function updateBanker(account_id, balance) {
   );
 }
 
+/**
+ * Delete a user
+ * @param {string} id - User ID
+ * @returns {Promise}
+ */
+async function deleteBanker(account_id) {
+  return Banker.deleteOne({ account_id: account_id });
+}
+
 module.exports = {
   getBankers,
   getBanker,
   createBanker,
   updateBanker,
+  deleteBanker,
+  getBankerByAccountId,
   nikIsRegistered,
   account_idIsRegistered,
 };

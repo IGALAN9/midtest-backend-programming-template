@@ -31,4 +31,10 @@ module.exports = (app) => {
     celebrate(bankersValidator.updateBanker),
     bankersControllers.updateBanker
   );
+  // Delete user
+  route.delete(
+    '/:account_id',
+    authenticationMiddleware,
+    bankersControllers.deleteBanker
+  );
 };

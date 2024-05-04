@@ -29,13 +29,13 @@ async function getBankers(request, response) {
 
 /**
  * Get banker detail
- * @param {string} id - User ID
+ * @param {string} id - Banker ID
  * @returns {Object}
  */
 async function getBanker(nik) {
   const banker = await bankersRepository.getBanker(nik);
   console.log(banker);
-  // User not found
+  // Banker not found
   if (!banker) {
     return null;
   }
@@ -120,7 +120,7 @@ async function account_idIsRegistered(account_id) {
 }
 
 /**
- * Update untuk saldo jika user menambahkan uang ke bank
+ * Update untuk saldo jika banker menambahkan uang ke bank
  * @param {string} account_id - account_id buat cari customer
  * @param {number} balance - balance(saldo)
  * @returns {boolean}
@@ -142,11 +142,33 @@ async function updateBanker(account_id, balance) {
   return true;
 }
 
+/**
+ * Delete banker
+ * @param {string} id - Banker ID
+ * @returns {boolean}
+ */
+async function deleteBanker(account_id) {
+  const banker = await bankersRepository.getBankerByAccountId(account_id);
+  // console.log(banker);
+  if (!banker) {
+    return null;
+  }
+
+  try {
+    await bankersRepository.deleteBanker(account_id);
+  } catch (err) {
+    return null;
+  }
+
+  return true;
+}
+
 module.exports = {
   getBankers,
   getBanker,
   createBanker,
   updateBanker,
+  deleteBanker,
   nikIsRegistered,
   account_idIsRegistered,
 };
