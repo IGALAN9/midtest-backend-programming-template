@@ -5,7 +5,7 @@ const { Banker } = require('../../../models');
  * @returns {Promise}
  */
 async function getBankers() {
-  return Banking.find({});
+  return Banker.find({});
 }
 
 /**
@@ -14,7 +14,7 @@ async function getBankers() {
  * @returns {Promise}
  */
 async function getBanker(nik) {
-  return Banking.find({ nik: nik });
+  return Banker.find({ nik: nik });
 }
 
 /**
