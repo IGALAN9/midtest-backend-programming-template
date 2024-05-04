@@ -21,10 +21,14 @@ module.exports = (app) => {
     bankersControllers.createBanker
   );
 
-  // Get banker detail
-  route.get('/:nik', authenticationMiddleware, bankersControllers.createBanker);
+  // Get customer detail
+  route.get(
+    '/:account_id',
+    authenticationMiddleware,
+    bankersControllers.createBanker
+  );
 
-  // Update user
+  // Update saldo customer
   route.put(
     '/:account_id',
     authenticationMiddleware,

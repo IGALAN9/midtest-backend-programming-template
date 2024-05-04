@@ -64,13 +64,13 @@ async function createBanker(request, response, next) {
       monthly_tax = 10000;
     }
 
-    // nik must be unique
+    // nik harus unik
     const nikIsRegistered = await bankersService.nikIsRegistered(nik);
     if (nikIsRegistered) {
       throw new Error(`Banker ${nik} already exists`);
     }
 
-    //account_id
+    //account_id harus unik
     const account_idIsRegistered =
       await bankersService.account_idIsRegistered(account_id);
     if (account_idIsRegistered) {
@@ -101,7 +101,7 @@ async function createBanker(request, response, next) {
 }
 
 /**
- * Handle update user request
+ * Handle update customer request
  * @param {object} request - Express request object
  * @param {object} response - Express response object
  * @param {object} next - Express route middlewares

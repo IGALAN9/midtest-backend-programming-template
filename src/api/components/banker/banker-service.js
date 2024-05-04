@@ -106,7 +106,7 @@ async function nikIsRegistered(nik) {
 
 /**
  * Check whether the account_id is already in use
- * @param {string} email - Email
+ * @param {string} account_Id - account_id
  * @returns {boolean}
  */
 async function account_idIsRegistered(account_id) {
@@ -120,10 +120,9 @@ async function account_idIsRegistered(account_id) {
 }
 
 /**
- * Update existing user
- * @param {string} id - User ID
- * @param {string} name - Name
- * @param {string} email - Email
+ * Update untuk saldo jika user menambahkan uang ke bank
+ * @param {string} account_id - account_id buat cari customer
+ * @param {number} balance - balance(saldo)
  * @returns {boolean}
  */
 async function updateBanker(account_id, balance) {

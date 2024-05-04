@@ -1,7 +1,7 @@
 const { Banker } = require('../../../models');
 
 /**
- * Get a list of users
+ * Get a list of customer
  * @returns {Promise}
  */
 async function getBankers() {
@@ -10,7 +10,7 @@ async function getBankers() {
 
 /**
  * Get user detail
- * @param {string} nik - User NIK
+ * @param {string} nik - customer nik
  * @returns {Promise}
  */
 async function getBanker(nik) {
@@ -18,10 +18,15 @@ async function getBanker(nik) {
 }
 
 /**
- * Create new user
- * @param {string} name - Name
- * @param {string} email - Email
- * @param {string} password - Hashed password
+ * Create new customer
+ * @param {string} account_id - account_id
+ * @param {string} nik - nik
+ * @param {string} nama - nama
+ * @param {string} email - nama
+ * @param {string} pin - Hashed pin
+ * @param {number} balance - balance
+ * @param {string} card - card_type
+ * @param {number} monthly_tax - monthly_tax
  * @returns {Promise}
  */
 async function createBanker(
@@ -58,9 +63,8 @@ async function account_idIsRegistered(account_id) {
 
 /**
  * Update existing user
- * @param {string} id - User ID
- * @param {string} name - Name
- * @param {string} email - Email
+ * @param {string} account_id
+ * @param {number} balance
  * @returns {Promise}
  */
 async function updateBanker(account_id, balance) {
