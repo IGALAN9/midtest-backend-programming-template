@@ -102,7 +102,9 @@ async function createBanker(request, response, next) {
       );
     }
 
-    return response.status(200).json({ account_id, nama });
+    return response
+      .status(200)
+      .json({ account_id, nama, massage: 'telah di buat' });
   } catch (error) {
     return next(error);
   }
@@ -128,7 +130,9 @@ async function updateBanker(request, response, next) {
       );
     }
 
-    return response.status(200).json({ account_id });
+    return response
+      .status(200)
+      .json({ account_id, massage: 'Telah di masukan ke saldo' });
   } catch (error) {
     return next(error);
   }
@@ -151,7 +155,7 @@ async function deleteBanker(request, response, next) {
         'Failed to delete Banker'
       );
     }
-    return response.status(200).json({ account_id });
+    return response.status(200).json({ account_id, massage: 'Telah di hapus' });
   } catch (error) {
     return next(error);
   }
