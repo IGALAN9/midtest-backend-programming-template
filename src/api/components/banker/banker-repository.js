@@ -14,9 +14,9 @@ async function getBankers() {
  * @returns {Promise}
  */
 async function getBanker(nik) {
-  return Banker.find({ nik: nik });
+  // console.log(nik);
+  return Banker.findOne({ nik: nik });
 }
-
 /**
  * Create new customer
  * @param {string} account_id - account_id

@@ -27,7 +27,7 @@ async function getBankers(request, response, next) {
  */
 async function getBanker(request, response, next) {
   try {
-    const banker = await bankersService.getBanker(request.params.account_id);
+    const banker = await bankersService.getBanker(request.params.nik);
 
     if (!banker) {
       throw errorResponder(errorTypes.UNPROCESSABLE_ENTITY, 'Unknown customer');

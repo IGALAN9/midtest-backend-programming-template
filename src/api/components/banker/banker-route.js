@@ -22,11 +22,7 @@ module.exports = (app) => {
   );
 
   // Get customer detail
-  route.get(
-    '/:account_id',
-    authenticationMiddleware,
-    bankersControllers.createBanker
-  );
+  route.get('/:nik', authenticationMiddleware, bankersControllers.getBanker);
 
   // Update saldo customer
   route.put(

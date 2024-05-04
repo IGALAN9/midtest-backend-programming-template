@@ -32,16 +32,16 @@ async function getBankers(request, response) {
  * @param {string} id - User ID
  * @returns {Object}
  */
-async function getBanker(id) {
-  const banker = await bankersRepository.getbanker(id);
-
+async function getBanker(nik) {
+  const banker = await bankersRepository.getBanker(nik);
+  console.log(banker);
   // User not found
   if (!banker) {
     return null;
   }
 
   return {
-    account_id: bankers.account_id,
+    account_id: banker.account_id,
     nik: banker.nik,
     nama: banker.nama,
     email: banker.email,
