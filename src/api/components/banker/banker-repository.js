@@ -14,10 +14,6 @@ async function getBankers() {
  * @param {string} nik - customer nik
  * @returns {Promise}
  */
-async function getBanker(nik) {
-  // console.log(nik);
-  return Banker.findOne({ nik: nik });
-}
 
 async function getBankerByAccountId(account_id) {
   // console.log(nik);
@@ -98,7 +94,6 @@ async function deleteBanker(account_id) {
 
 module.exports = {
   getBankers,
-  getBanker,
   createBanker,
   updateBanker,
   deleteBanker,

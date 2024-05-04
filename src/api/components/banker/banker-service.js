@@ -32,8 +32,8 @@ async function getBankers(request, response) {
  * @param {string} id - Banker ID
  * @returns {Object}
  */
-async function getBanker(nik) {
-  const banker = await bankersRepository.getBanker(nik);
+async function getBanker(account_id) {
+  const banker = await bankersRepository.getBankerByAccountId(account_id);
   console.log(banker);
   // Banker not found
   if (!banker) {
@@ -126,7 +126,7 @@ async function account_idIsRegistered(account_id) {
  * @returns {boolean}
  */
 async function updateBanker(account_id, balance) {
-  const banker = await bankersRepository.getBanker(account_id);
+  const banker = await bankersRepository.getBankerByAccountId(account_id);
 
   // customer not found
   if (!banker) {
