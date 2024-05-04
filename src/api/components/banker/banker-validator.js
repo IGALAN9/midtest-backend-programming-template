@@ -25,22 +25,7 @@ module.exports = {
 
   updateBanker: {
     body: {
-      name: joi.string().min(1).max(100).required().label('Name'),
-      email: joi.string().email().required().label('Email'),
-    },
-  },
-
-  changePassword: {
-    body: {
-      pin_old: joi.number().min(6).max(6).required().label('PIN OLD'),
-      pin_new: joi.number().min(6).max(6).required().label('PIN NEW'),
-
-      pin_confirm: joi
-        .number()
-        .min(6)
-        .max(6)
-        .required()
-        .label('PIN CONFIRMATION'),
+      balance: joi.number().min(0).required().label('Balance'),
     },
   },
 };

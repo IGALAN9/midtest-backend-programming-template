@@ -1,7 +1,7 @@
 const bankersRepository = require('./banker-repository');
 const { hashPassword } = require('../../../utils/password');
 const { response } = require('express');
-const { nik } = require('../../../models/banker-schema');
+const { nik, account_id } = require('../../../models/banker-schema');
 
 /**
  * Get list of bankers
@@ -90,7 +90,7 @@ async function createBanker(
 }
 
 /**
- * Check whether the email is registered
+ * Check whether the nik is registered
  * @param {string} email - Email
  * @returns {boolean}
  */
@@ -104,9 +104,50 @@ async function nikIsRegistered(nik) {
   return false;
 }
 
+/**
+ * Check whether the account_id is already in use
+ * @param {string} email - Email
+ * @returns {boolean}
+ */
+async function account_idIsRegistered(account_id) {
+  const banker = await bankersRepository.account_idIsRegistered(account_id);
+
+  if (banker) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Update existing user
+ * @param {string} id - User ID
+ * @param {string} name - Name
+ * @param {string} email - Email
+ * @returns {boolean}
+ */
+async function updateBanker(account_id, balance) {
+  const banker = await bankersRepository.getBanker(account_id);
+
+  // customer not found
+  if (!banker) {
+    return null;
+  }
+
+  try {
+    await bankersRepository.updateBanker(account_id, balance);
+  } catch (err) {
+    return null;
+  }
+
+  return true;
+}
+
 module.exports = {
   getBankers,
   getBanker,
   createBanker,
+  updateBanker,
   nikIsRegistered,
+  account_idIsRegistered,
 };

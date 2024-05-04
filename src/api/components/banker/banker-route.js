@@ -23,4 +23,12 @@ module.exports = (app) => {
 
   // Get banker detail
   route.get('/:nik', authenticationMiddleware, bankersControllers.createBanker);
+
+  // Update user
+  route.put(
+    '/:account_id',
+    authenticationMiddleware,
+    celebrate(bankersValidator.updateBanker),
+    bankersControllers.updateBanker
+  );
 };

@@ -57,17 +57,24 @@ async function createBanker(request, response, next) {
     const balance = request.body.balance;
     const card = request.body.card;
     let monthly_tax = 2000;
-    if (card == 'gold') {
+    if (card == 'Gold') {
       monthly_tax = 5000;
     }
-    if (card == 'platinum') {
+    if (card == 'Platinum') {
       monthly_tax = 10000;
     }
 
-    // account_id must be unique
+    // nik must be unique
     const nikIsRegistered = await bankersService.nikIsRegistered(nik);
     if (nikIsRegistered) {
       throw new Error(`Banker ${nik} already exists`);
+    }
+
+    //account_id
+    const account_idIsRegistered =
+      await bankersService.account_idIsRegistered(account_id);
+    if (account_idIsRegistered) {
+      throw new Error(`Banker ${account_id} already exists`);
     }
 
     const success = await bankersService.createBanker(
@@ -93,8 +100,35 @@ async function createBanker(request, response, next) {
   }
 }
 
+/**
+ * Handle update user request
+ * @param {object} request - Express request object
+ * @param {object} response - Express response object
+ * @param {object} next - Express route middlewares
+ * @returns {object} Response object or pass an error to the next route
+ */
+async function updateBanker(request, response, next) {
+  try {
+    const account_id = request.params.account_id;
+    const balance = request.body.balance;
+
+    const success = await bankersService.updateBanker(account_id, balance);
+    if (!success) {
+      throw errorResponder(
+        errorTypes.UNPROCESSABLE_ENTITY,
+        'Failed to update customer'
+      );
+    }
+
+    return response.status(200).json({ account_id });
+  } catch (error) {
+    return next(error);
+  }
+}
+
 module.exports = {
   getBankers,
   getBanker,
   createBanker,
+  updateBanker,
 };
